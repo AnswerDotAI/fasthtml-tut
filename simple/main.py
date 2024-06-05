@@ -1,4 +1,5 @@
 from fasthtml.fastapp import *
+import uvicorn
 
 app,todos,Todo = fast_app('data/todos.db', id=int, title=str, done=bool, pk='id')
 rt = app.route
