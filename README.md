@@ -18,7 +18,6 @@ fh_railway_link
 railway volume add -m /app/data
 ```
 
-There is a shell script `deploy.sh` in the current directory with those lines, so a shortcut is to just call it from the directory with the app:
+There is a shell script `deploy.sh` in the current directory with those lines, so a shortcut is to just call this from the app's directory:
 
     ../deploy.sh
-
