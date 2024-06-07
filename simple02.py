@@ -19,7 +19,6 @@ def get():
             )
     return Page('Todo list', card)
 
-
 @rt("/todos/{id}")
 def get(id:int):
     contents = Div(

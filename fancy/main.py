@@ -9,18 +9,19 @@ Todo = todos.dataclass()
 app = FastHTML(hdrs=[picolink])
 rt = app.route
 
-def render_todo(todo):
-   done = "✅" if todo.done else ""
-   link = AX(todo.title, hx_get=f'/todo/{todo.id}', target_id='details')
-   edit = AX('edit',     hx_get=f'/edit/{todo.id}', target_id='details')
-   return Li(done, link, ' | ', edit, id=f'todo-{todo.id}')
+@patch
+def __xt__(self:Todo):
+   done = "✅" if self.done else ""
+   link = AX(self.title, hx_get=f'/todo/{self.id}', target_id='details')
+   edit = AX('edit',     hx_get=f'/edit/{self.id}', target_id='details')
+   return Li(done, link, ' | ', edit, id=f'todo-{self.id}')
 
 def get_newinp(): return Input(placeholder="New Todo", name="title", hx_swap_oob="true", id="newtodo")
 def get_footer(): return Div(hx_swap_oob='true', id="details")
 
 @rt("/")
 def get():
-  todolist = Ul(*map(render_todo, todos()), id="todolist")
+  todolist = Ul(*todos(), id="todolist")
   header = Form(Group(get_newinp(), Button("Add")),
                 hx_post="/", target_id="todolist", hx_swap="beforeend")
   card = Card(todolist, header=header, footer=get_footer())
@@ -28,7 +29,7 @@ def get():
   return Title("Todo list"), contents
 
 @rt("/")
-def post(todo:Todo): return render_todo(todos.insert(todo)), get_newinp()
+def post(todo:Todo): return todos.insert(todo), get_newinp()
 
 @rt("/todo/{id}")
 def delete(id:int):
@@ -38,7 +39,7 @@ def delete(id:int):
 @rt("/todo/{id}")
 def get(id:int):
   todo = todos[id]
-  btn = Button('Delete', hx_delete=f'/todo/{id}', target_id=f'todo-{todo.id}', hx_swap="delete")
+  btn = Button('Delete', hx_delete=f'/todo/{id}', target_id=f'todo-{id}', hx_swap="delete")
   return P(todo.title), btn
 
 @rt("/edit/{id}")
@@ -49,7 +50,7 @@ def get(id:int):
     return fill_form(res, todos.get(id))
 
 @rt("/")
-def put(todo: Todo): return render_todo(todos.update(todo)), get_footer()
+def put(todo: Todo): return todos.update(todo), get_footer()
 
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=int(os.getenv("PORT", default=8000)))

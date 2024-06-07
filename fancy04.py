@@ -27,7 +27,7 @@ def get():
 @rt("/")
 def post(todo:Todo): return render_todo(todos.insert(todo))
 
-@rt("/")
+@rt("/todo/{id}")
 def delete(id:int):
    todos.delete(id)
    return '', Div(hx_swap_oob='innerHTML', id='details')
@@ -35,6 +35,5 @@ def delete(id:int):
 @rt("/todo/{id}")
 def get(id:int):
   todo = todos[id]
-  btn = Button('Delete', hx_delete='/', name='id', value=id, target_id=f'todo-{todo.id}', hx_swap="outerHTML")
+  btn = Button('Delete', hx_delete=f'/todo/{id}', target_id=f'todo-{id}', hx_swap="delete")
   return P(todo.title), btn
-
