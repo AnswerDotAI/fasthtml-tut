@@ -10,7 +10,7 @@ app = FastHTML(hdrs=[picolink])
 rt = app.route
 
 @patch
-def __xt__(self:Todo):
+def __ft__(self:Todo):
    done = "✅" if self.done else ""
    link = AX(self.title, hx_get=f'/todo/{self.id}', target_id='details')
    edit = AX('edit',     hx_get=f'/edit/{self.id}', target_id='details')
