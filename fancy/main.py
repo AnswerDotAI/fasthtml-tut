@@ -45,7 +45,7 @@ def get(id:int):
 @rt("/edit/{id}")
 def get(id:int):
     res = Form(Group(Input(id="title"), Button("Save")),
-        Hidden(id="id"), Checkbox(id="done", label='Done'),
+        Hidden(id="id"), CheckboxX(id="done", label='Done'),
         hx_put="/", target_id=f'todo-{id}', id="edit")
     return fill_form(res, todos.get(id))
 
