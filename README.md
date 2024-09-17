@@ -1,5 +1,7 @@
 # fasthtml-tut
 
+> **NB**: This tutorial was written before the first official release of FastHTML, so some things have changed a bit. We recommend instead using the up to date examples instead of this repo: https://github.com/AnswerDotAI/fasthtml/tree/main/examples
+
 Code to go with beginner FastHTML tutorial. First install fasthtml:
 
     pip install -U python-fasthtml
