@@ -1,14 +1,13 @@
-from fasthtml.fastapp import *
-import uvicorn
+from fasthtml.common import *
+import subprocess
 
-app,todos,Todo = fast_app('data/todos.db', id=int, title=str, done=bool, pk='id')
-rt = app.route
+app,rt,todos,Todo = fast_app('data/todos.db', id=int, title=str, done=bool, pk='id', live=True)
 
 def TodoRow(todo):
     return Li(
-        A(todo.title, hx_get=f'/todos/{todo.id}'),
+        A(todo.title, hx_get=f'/todos/{todo.id}', hx_target='#current-todo'),
         (' (done)' if todo.done else '') + ' | ',
-        A('edit',     hx_get=f'/edit/{todo.id}'),
+        A('edit',     hx_get=f'/edit/{todo.id}', hx_target='#current-todo'),
         id=f'todo-{todo.id}'
     )
 
@@ -17,14 +16,14 @@ def home():
             Group(
                 Input(name="title", placeholder="New Todo"),
                 Button("Add")
-            ), hx_post="/"
+            ), hx_post="/", hx_target="body"
         )
     card = Card(
                 Ul(*map(TodoRow, todos()), id='todo-list'),
                 header=add,
                 footer=Div(id='current-todo')
             )
-    return Page('Todo list', card)
+    return Title('Simple - main.py'), Container(H1('Todo list'), card)
 
 @rt("/")
 def get(): return home()
@@ -54,20 +53,33 @@ def get(id:int):
             Hidden(id="id"),
             CheckboxX(id="done", label='Done'),
             Button('Back', hx_get='/'),
-            hx_put="/", id="edit"
+            hx_put="/", hx_target='body', id="edit"
         )
     frm = fill_form(res, todos[id])
-    return Page('Edit Todo', frm)
+    return Container('Edit Todo', frm)
 
 @rt("/todos/{id}")
 def get(id:int):
     contents = Div(
-        Div(todos[id].title),
-        Button('Delete', hx_delete='/', value=id, name="id"),
-        Button('Back', hx_get='/')
+        P(todos[id].title),
+        Button('Delete', hx_delete='/', hx_target='body', value=id, name="id"),
+        Nbsp(),
+        Button('Back', hx_get='/', hx_target='body')
     )
-    return Page('Todo details', contents)
+    return Container('Todo details', contents)
 
-if __name__ == '__main__':
-    uvicorn.run(app, host='0.0.0.0', port=int(os.getenv("PORT", default=8000)))
+def serve_dev(db_path='data/todos.db', sqlite_port=8090, jupyter_port=8091, tw_src='./src/app.css', tw_dist='./public/app.css'):
+    sqlite_process = subprocess.Popen(
+        ['sqlite_web', db_path, '--port', str(sqlite_port), '--no-browser'],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL
+    )
 
+    try:
+        print(f'SQLite: http://localhost:{sqlite_port}')
+        serve(reload_includes=["*.css"])
+    finally:
+        sqlite_process.terminate()
+
+serve_dev()
+#serve()

@@ -1,18 +1,20 @@
-from fasthtml.fastapp import *
+from fasthtml.common import *
 
-app = fast_app()
-rt = app.route
+app,rt = fast_app(live=true)
 
-@rt("/")
+@rt('/')
 def get():
     contents = Div(
-        A('Link', hx_get='/page'),
+        A('Link', href='/page'),
+        Card('hi'),
     )
-    return Page('Home', contents)
+    return Title('simple01.py'), Container(H1('Home'), contents)
 
-@rt("/page")
+@rt('/page')
 def get():
     contents = Div(
-        A('Home', hx_get='/'),
+        A('Home', href='/'),
     )
-    return Page('Page', contents)
+    return Title('simple01.py'), Container(H1('Page'), contents)
+
+serve()

@@ -1,6 +1,8 @@
 # fasthtml-tut
 
-> **NB**: This tutorial was written before the first official release of FastHTML, so some things have changed a bit. We recommend instead using the up to date examples instead of this repo: https://github.com/AnswerDotAI/fasthtml/tree/main/examples
+[![fasthtml-tut video tutorial](https://img.youtube.com/vi/ptRaku0zyeA/0.jpg)](https://youtu.be/ptRaku0zyeA)
+
+> **NB**: This tutorial was written before the first official release of FastHTML, so some of the code in the video may look different from what's here. All examples have been recently updated to work with the latest version (circa October 2024).
 
 Code to go with beginner FastHTML tutorial. First install fasthtml:
 
