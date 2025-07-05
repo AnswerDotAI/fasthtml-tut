@@ -1,10 +1,12 @@
 from fasthtml.common import *
 
-app,rt,todos,Todo = fast_app('data/todos.db', id=int, title=str, done=bool, pk='id', live=True)
+# We need to use todo_title as column name
+# since title is parameter for fast_app
+app,rt,todos,Todo = fast_app('data/todos.db', id=int, todo_title=str, done=bool, pk='id', live=True)
 
 def TodoRow(todo):
     return Li(
-        A(todo.title, hx_get=f'/todos/{todo.id}', hx_target='#current-todo'),
+        A(todo.todo_title, hx_get=f'/todos/{todo.id}', hx_target='#current-todo'),
         (' (done)' if todo.done else '') + ' | ',
         A('edit',     hx_get=f'/edit/{todo.id}', hx_target='#current-todo'),
         id=f'todo-{todo.id}'
@@ -13,7 +15,7 @@ def TodoRow(todo):
 def home():
     add = Form(
             Group(
-                Input(name="title", placeholder="New Todo"),
+                Input(name="todo_title", placeholder="New Todo"),
                 Button("Add")
             ), hx_post="/", hx_target="body"
         )
@@ -46,7 +48,7 @@ def delete(id:int):
 def get(id:int):
     res = Form(
             Group(
-                Input(id="title"),
+                Input(id="todo_title"),
                 Button("Save")
             ),
             Hidden(id="id"),
@@ -60,7 +62,7 @@ def get(id:int):
 @rt("/todos/{id}")
 def get(id:int):
     contents = Div(
-        P(todos[id].title),
+        P(todos[id].todo_title),
         Button('Delete', hx_delete='/', hx_target='body', value=id, name="id"),
         Nbsp(),
         Button('Back', hx_get='/', hx_target='body')
