@@ -57,7 +57,7 @@ def get(id:int):
             hx_put="/", hx_target='body', id="edit"
         )
     frm = fill_form(res, todos[id])
-    return todo_Title('simple04.py'), Container(H1('Edit Todo'), frm)
+    return Title('simple04.py'), Container(H1('Edit Todo'), frm)
 
 @rt("/todos/{id}")
 def get(id:int):
